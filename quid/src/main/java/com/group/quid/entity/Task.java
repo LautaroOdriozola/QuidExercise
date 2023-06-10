@@ -1,6 +1,8 @@
 package com.group.quid.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 @Entity
 @Table(name = "tasks")
@@ -10,6 +12,8 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "state", nullable = false)
+    @Min(1)
+    @Max(2)
     private Integer state;
     @Column(name = "title", nullable = false, length = 40)
     private String title;

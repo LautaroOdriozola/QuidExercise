@@ -1,6 +1,7 @@
 package com.group.quid.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import java.util.List;
 
 @Entity
@@ -15,12 +16,12 @@ public class User {
     @Column(name = "surname", nullable = false, length = 40)
     private String surname;
     @Column(name = "email", nullable = false, unique = true)
+    @Email
     private String email;
     @Column(name = "password", nullable = false, length = 64)
     private String password;
     @OneToMany(mappedBy = "user")
     private List<Task> tasks;
-
 
     public Long getUser_id() {
         return user_id;

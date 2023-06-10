@@ -1,4 +1,4 @@
-package com.group.quid.DTO;
+package com.group.quid.DTO.enums;
 
 public enum State {
 
