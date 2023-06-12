@@ -12,15 +12,13 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "state", nullable = false)
-    @Min(1)
-    @Max(2)
     private Integer state;
     @Column(name = "title", nullable = false, length = 40)
     private String title;
     @Column(name = "description", nullable = false, length = 200)
     private String description;
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = true)
     private User user;
 
     public Long getId() {
