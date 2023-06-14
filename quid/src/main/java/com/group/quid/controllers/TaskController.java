@@ -8,6 +8,7 @@ import com.group.quid.entity.Task;
 import com.group.quid.entity.User;
 import com.group.quid.jwt.JwtTokenUtil;
 import com.group.quid.services.TaskService;
+import com.group.quid.services.UserService;
 import com.group.quid.utils.Utils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,7 @@ public class TaskController {
     @Autowired
     private TaskService taskService;
     @Autowired
-    private UserController userController;
+    private UserService userService;
     @Autowired
     private ModelMapper modelMapper;
     @Autowired
@@ -55,16 +56,14 @@ public class TaskController {
             return ResponseEntity.badRequest().body(errors);
         }
 
-        ResponseEntity<?> resp = userController.getUserByEmail(authentication.getName());
-        UserDTO user = (UserDTO) resp.getBody();
+        Optional<User> userByEmail = userService.getUserByEmail(authentication.getName());
         taskDTO.setState(State.PENDING.getState());
         if(taskDTO.getUser_id() == null){
-            taskDTO.setUser_id(user.getUser_id());
+            taskDTO.setUser_id(userByEmail.get().getUser_id());
         } else{
-            ResponseEntity<?> checkUser = userController.getUserById(taskDTO.getUser_id());
-            if(checkUser.getStatusCode().is2xxSuccessful()){
-                UserDTO userDTO = (UserDTO) checkUser.getBody();
-                taskDTO.setUser_id(userDTO.getUser_id());
+            Optional<User> userById = userService.getUserById(taskDTO.getUser_id());
+            if(userById.isPresent()){
+                taskDTO.setUser_id(userById.get().getUser_id());
             } else{
                 Map<String, String> errors = new HashMap<>();
                 errors.put("error", "There is no user id passed by request.");
